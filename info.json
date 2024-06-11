@@ -1,0 +1,77 @@
+{
+  "users": [
+    {
+      "name": "user1",
+      "training": {
+        "trained_for_x": true,
+        "trained_for_y": true
+      },
+      "days_unavailable": []
+    },
+    {
+      "name": "user2",
+      "training": {
+        "trained_for_x": false,
+        "trained_for_y": true
+      },
+      "days_unavailable": []
+    },
+    {
+      "name": "user3",
+      "training": {
+        "trained_for_x": false,
+        "trained_for_y": false
+      },
+      "days_unavailable": []
+    },
+    {
+      "name": "user4",
+      "training": {
+        "trained_for_x": false,
+        "trained_for_y": false
+      },
+      "days_unavailable": []
+    },
+    {
+      "name": "user5",
+      "training": {
+        "trained_for_x": false,
+        "trained_for_y": false
+      },
+      "days_unavailable": []
+    },
+    {
+      "name": "user6",
+      "training": {
+        "trained_for_x": true,
+        "trained_for_y": false
+      },
+      "days_unavailable": ["Tuesday"]
+    },
+    {
+      "name": "user7",
+      "training": {
+        "trained_for_x": false,
+        "trained_for_y": false
+      },
+      "days_unavailable": []
+    },
+    {
+      "name": "user8",
+      "training": {
+        "trained_for_x": true,
+        "trained_for_y": false
+      },
+      "days_unavailable": []
+    }
+  ],
+  "tasks": ["task_a", "task_b", "task_c", "task_x", "task_y"],
+  "training_required": {
+    "task_a": "",
+    "task_b": "",
+    "task_c": "",
+    "task_x": "trained_for_x",
+    "task_y": "trained_for_y"
+  },
+  "days_of_week": ["Tuesday", "Wednesday", "Thursday", "Friday"]
+}
