@@ -13,17 +13,17 @@ import (
 
 // User represents a user with training and availability information.
 type User struct {
-	Name            string
-	Trainings       []string
-	DaysUnavailable []string
+	Name            string   `json:"name"`
+	Trainings       []string `json:"trainings"`
+	DaysUnavailable []string `json:"days_unavailable"`
 }
 
 // Task represents a task with required training and days on which it can be performed.
 type Task struct {
-	Name              string
+	Name              string   `json:"name"`
 	RequiredTrainings []string `json:"required_trainings"`
-	Days              []string
-	Notes             string
+	Days              []string `json:"days"`
+	Notes             string   `json:"notes"`
 }
 
 // Info represents the structure of the info.json file.
@@ -74,7 +74,7 @@ func isUserAvailable(user User, day string) bool {
 
 // shuffleUsers shuffles the users slice.
 func shuffleUsers(users []User) {
-	rand.Seed(time.Now().UnixNano())
+	rand.NewSource(time.Now().UnixNano())
 	rand.Shuffle(len(users), func(i, j int) {
 		users[i], users[j] = users[j], users[i]
 	})
@@ -110,36 +110,119 @@ func loadPreviousSchedule(filename string) (map[string]map[string]string, error)
 	return previousSchedule, nil
 }
 
-// assignTask assigns a task to the user with the least tasks who is available and has the required training,
-// while avoiding assigning the same task to the same user as in the previous week where possible.
-func assignTask(schedule map[string]map[string]string, users []User, task Task, day string, userTaskCount map[string]int, previousSchedule map[string]map[string]string) bool {
-	sort.Slice(users, func(i, j int) bool {
-		return userTaskCount[users[i].Name] < userTaskCount[users[j].Name]
-	})
+type WeightedUser struct {
+	User   User
+	Weight int
+}
+
+// Function to shuffle users based on their weights
+func weightedShuffle(users []User, userTaskCount map[string]int) []User {
+	var weightedUsers []WeightedUser
+
+	// Calculate the weights with a stronger effect
+	for _, user := range users {
+		// Use a quadratic function to make the weight effect stronger
+		// Adjust the base weight if necessary
+		weight := 1000 - (userTaskCount[user.Name] * userTaskCount[user.Name])
+		weightedUsers = append(weightedUsers, WeightedUser{User: user, Weight: weight})
+	}
+
+	// Shuffle users based on their weights (rest of the function remains the same)
+	rand.NewSource(time.Now().UnixNano())
+	shuffledUsers := make([]User, 0, len(users))
+	for len(weightedUsers) > 0 {
+		totalWeight := 0
+		for _, wu := range weightedUsers {
+			totalWeight += wu.Weight
+		}
+
+		randWeight := rand.Intn(totalWeight)
+		currentWeight := 0
+		selectedIndex := 0
+		for i, wu := range weightedUsers {
+			currentWeight += wu.Weight
+			if randWeight < currentWeight {
+				selectedIndex = i
+				break
+			}
+			fmt.Println(wu.User.Name, currentWeight, randWeight, userTaskCount[wu.User.Name], wu.Weight, totalWeight)
+		}
+
+		shuffledUsers = append(shuffledUsers, weightedUsers[selectedIndex].User)
+		weightedUsers = append(weightedUsers[:selectedIndex], weightedUsers[selectedIndex+1:]...)
+	}
+	for _, user := range shuffledUsers {
+		fmt.Println(user.Name, userTaskCount[user.Name])
+	}
+	fmt.Println("====================================")
+
+	return shuffledUsers
+}
+
+func assignTask(
+	schedule map[string]map[string]string,
+	users []User,
+	task Task,
+	day string,
+	userTaskCount map[string]int,
+	previousSchedule map[string]map[string]string) bool {
+
+	// Perform weighted shuffle
+	users = weightedShuffle(users, userTaskCount)
+
+	// Determine the previous day correctly
+	days := getSortedKeys(schedule) // Ensure this function returns the days in correct order
+	previousDayIndex := -1
+	for i, d := range days {
+		if d == day {
+			previousDayIndex = i - 1
+			break
+		}
+	}
+	previousDay := ""
+	if previousDayIndex >= 0 {
+		previousDay = days[previousDayIndex]
+	}
 
 	previousUser := ""
-	if previousSchedule != nil {
-		previousUser = previousSchedule[day][task.Name]
+	if previousSchedule != nil && previousDay != "" {
+		previousUser = schedule[previousDay][task.Name]
 	}
 
+	// Iterate through the users
 	for _, user := range users {
+		// Skip the user if they were assigned the same task on the previous day
+		if previousDay != "" && schedule[previousDay][task.Name] == user.Name {
+			continue
+		}
+
+		// Ensure the user is not the same as the previous week and has the required training and availability
 		if user.Name != previousUser && userHasTraining(user, task.RequiredTrainings) && isUserAvailable(user, day) {
+			// if userTaskCount[user.Name] >= 14 {
+			// 	continue
+			// }
+
+			// Assign the task to the user
 			schedule[day][task.Name] = user.Name
 			userTaskCount[user.Name]++
 			return true
 		}
 	}
 
-	// If no suitable user is found, allow the same user as previous week
-	for _, user := range users {
-		if userHasTraining(user, task.RequiredTrainings) && isUserAvailable(user, day) {
-			schedule[day][task.Name] = user.Name
-			userTaskCount[user.Name]++
-			return true
-		}
-	}
+	// If no suitable user is found, consider allowing repeats under certain conditions
+	// Additional logic here if needed
 
 	return false
+}
+
+// Helper function to get sorted keys of a map
+func getSortedKeys(m map[string]map[string]string) []string {
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
 }
 
 // generateWeeklySchedule creates a schedule ensuring tasks are assigned to eligible users with the least tasks,
@@ -153,7 +236,6 @@ func generateWeeklySchedule(info Info, previousSchedule map[string]map[string]st
 		schedule[day] = make(map[string]string)
 	}
 
-	// Handle special tasks first
 	for _, task := range info.Tasks {
 		if task.Notes == "same person all week" {
 			shuffleUsers(info.Users)
@@ -170,38 +252,46 @@ func generateWeeklySchedule(info Info, previousSchedule map[string]map[string]st
 		}
 	}
 
-	// Handle EOD Reports and Late Person Tasks together
+	// Handle EOD Reports and Late Person Tasks
 	for _, task := range info.Tasks {
-		if task.Notes == "whoever has EOD has late person tasks" {
+		if task.Name == "EOD Reports" {
 			for _, day := range task.Days {
-				shuffleUsers(info.Users)
-				for _, user := range info.Users {
-					if userHasTraining(user, task.RequiredTrainings) && isUserAvailable(user, day) {
-						schedule[day][task.Name] = user.Name
-						schedule[day]["Late Person Tasks"] = user.Name
-						userTaskCount[user.Name] += 2
-						break
-					}
+				assigned := assignTask(schedule, info.Users, task, day, userTaskCount, previousSchedule)
+				if assigned {
+					schedule[day]["Late Person Tasks"] = schedule[day][task.Name]
+					userTaskCount[schedule[day][task.Name]]++
+				} else {
+					log.Printf("No user available for task %s on %s", task.Name, day)
 				}
 			}
 		}
 	}
-
 	// Assign remaining tasks
 	for _, task := range info.Tasks {
+		// Check if the task has already been assigned
 		if _, exists := taskAssignments[task.Name]; exists {
-			continue
-		}
-		if task.Notes == "whoever has EOD has late person tasks" {
-			continue
+			continue // Skip this task as it's already been handled
 		}
 		for _, day := range task.Days {
+			if _, exists := schedule[day][task.Name]; exists {
+				continue // Skip this task as it's already been handled
+			}
 			assigned := assignTask(schedule, info.Users, task, day, userTaskCount, previousSchedule)
 			if !assigned {
 				log.Printf("No user available for task %s on %s", task.Name, day)
+			} else {
+				// If the task is successfully assigned, mark it as handled
+				taskAssignments[task.Name] = schedule[day][task.Name]
 			}
 		}
 	}
+
+	// // check eod and late person tasks by day
+	// for _, day := range info.DaysOfWeek {
+	// 	fmt.Println(day)
+	// 	fmt.Println("EOD Reports", schedule[day]["EOD Reports"])
+	// 	fmt.Println("Late Person Tasks", schedule[day]["Late Person Tasks"])
+	// }
 
 	return schedule, userTaskCount
 }
@@ -222,7 +312,9 @@ func scheduleToCSV(schedule map[string]map[string]string, daysOfWeek []string, f
 
 	taskSet := make(map[string]bool)
 	for _, dayTasks := range schedule {
+
 		for task := range dayTasks {
+
 			taskSet[task] = true
 		}
 	}
@@ -231,12 +323,15 @@ func scheduleToCSV(schedule map[string]map[string]string, daysOfWeek []string, f
 	for task := range taskSet {
 		tasks = append(tasks, task)
 	}
-	sort.Strings(tasks)
 
 	for _, task := range tasks {
 		record := []string{task}
 		for _, day := range daysOfWeek {
-			record = append(record, schedule[day][task])
+			if name, ok := schedule[day][task]; ok {
+				record = append(record, name)
+			} else {
+				record = append(record, "")
+			}
 		}
 		writer.Write(record)
 	}
@@ -277,7 +372,7 @@ func main() {
 		}
 	}
 
-	schedule, _ := generateWeeklySchedule(info, previousSchedule)
+	schedule, userTaskCount := generateWeeklySchedule(info, previousSchedule)
 
 	err = scheduleToCSV(schedule, info.DaysOfWeek, "weekly_schedule.csv")
 	if err != nil {
@@ -285,10 +380,10 @@ func main() {
 	}
 
 	// Print the number of tasks per person
-	// fmt.Println("Number of tasks per person:")
-	// for user, count := range userTaskCount {
-	// 	fmt.Printf("%s: %d tasks\n", user, count)
-	// }
+	fmt.Println("Number of tasks per person:")
+	for user, count := range userTaskCount {
+		fmt.Printf("%s: %d tasks\n", user, count)
+	}
 	fmt.Println("\nSchedule generation complete! Check the weekly_schedule.csv file. Press Enter to exit.")
 	fmt.Scanln()
 
