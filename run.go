@@ -150,6 +150,12 @@ func assignTask(
 	// Filter users who meet the criteria
 	var eligibleUsers []User
 	for _, user := range users {
+
+		// Skip Sophia 80% of the time
+		if user.Name == "Sophia" && userTaskCount[user.Name] == 8 {
+			continue
+		}
+
 		// Skip if the user was assigned the same task on the previous day in the current schedule
 		if previousDay != "" && schedule[previousDay][task.Name] == user.Name {
 			continue
@@ -186,20 +192,15 @@ func assignTask(
 		taskCounts[i] = userTaskCount[user.Name]
 	}
 	sort.Ints(taskCounts)
-	rangeEnd := minTaskCount + int(float64(len(eligibleUsers))*0.3) // Use the 10th percentile as the range
+	rangeEnd := minTaskCount + int(float64(len(eligibleUsers))*0.2)
 
 	// Filter users who have the minimum task count or within the calculated range
 	var leastLoadedUsers []User
 	for _, user := range eligibleUsers {
 		if userTaskCount[user.Name] <= rangeEnd {
-			if user.Name == "Sophia" && userTaskCount[user.Name] == 9 {
-				fmt.Println("Sophia has 9 tasks")
-				continue
-			}
 			leastLoadedUsers = append(leastLoadedUsers, user)
 		}
 	}
-
 	if len(leastLoadedUsers) == 0 {
 		return false // No suitable user found
 	}
