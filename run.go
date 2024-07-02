@@ -7,6 +7,7 @@ import (
 	"log"
 	"math/rand"
 	"os"
+	"path/filepath"
 	"sort"
 	"time"
 )
@@ -347,16 +348,16 @@ func main() {
                                    `
 	fmt.Println(asciiArt)
 
-	// exePath, err := os.Executable()
-	// if err != nil {
-	// 	log.Fatalf("Error getting executable path: %v", err)
-	// }
-	// exeDir := filepath.Dir(exePath)
+	exePath, err := os.Executable()
+	if err != nil {
+		log.Fatalf("Error getting executable path: %v", err)
+	}
+	exeDir := filepath.Dir(exePath)
 
-	// err = os.Chdir(exeDir)
-	// if err != nil {
-	// 	log.Fatalf("Error changing working directory: %v", err)
-	// }
+	err = os.Chdir(exeDir)
+	if err != nil {
+		log.Fatalf("Error changing working directory: %v", err)
+	}
 
 	info, err := loadInfo("info.json")
 	if err != nil {
@@ -371,7 +372,7 @@ func main() {
 		}
 	}
 
-	schedule, userTaskCount := generateWeeklySchedule(info, previousSchedule)
+	schedule, _ := generateWeeklySchedule(info, previousSchedule)
 
 	err = scheduleToCSV(schedule, info.DaysOfWeek, "weekly_schedule.csv")
 	if err != nil {
@@ -379,10 +380,10 @@ func main() {
 	}
 
 	// Print the number of tasks per person
-	fmt.Println("Number of tasks per person:")
-	for user, count := range userTaskCount {
-		fmt.Printf("%s: %d tasks\n", user, count)
-	}
+	// fmt.Println("Number of tasks per person:")
+	// for user, count := range userTaskCount {
+	// 	fmt.Printf("%s: %d tasks\n", user, count)
+	// }
 	fmt.Println("\nSchedule generation complete! Check the weekly_schedule.csv file. Press Enter to exit.")
 	// fmt.Scanln()
 

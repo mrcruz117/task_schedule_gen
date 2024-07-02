@@ -293,12 +293,6 @@
       "name": "Late Person Tasks",
       "required_trainings": ["t19"],
       "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-    },
-    {
-      "name": "OOO",
-      "required_trainings": ["t20"],
-      "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-      "notes": "can be blank and manually input"
     }
   ],
 
