@@ -1,0 +1,322 @@
+{
+  "users": [
+    {
+      "name": "Sophia",
+      "trainings": [
+        "t3",
+        "t4",
+        "t5",
+        "t11",
+        "t14",
+        "t15",
+        "t16",
+        "t17",
+        "t18",
+        "t19",
+        "t20"
+      ],
+      "days_unavailable": []
+    },
+    {
+      "name": "Evan",
+      "trainings": [
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6",
+        "t7",
+        "t8",
+        "t9",
+        "t10",
+        "t11",
+        "t12",
+        "t13",
+        "t14",
+        "t15",
+        "t16",
+        "t17",
+        "t18",
+        "t19",
+        "t20"
+      ],
+      "days_unavailable": []
+    },
+    {
+      "name": "Sapna",
+      "trainings": [
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6",
+        "t7",
+        "t8",
+        "t9",
+        "t10",
+        "t11",
+        "t12",
+        "t13",
+        "t14",
+        "t15",
+        "t16",
+        "t17",
+        "t18",
+        "t19",
+        "t20"
+      ],
+      "days_unavailable": []
+    },
+    {
+      "name": "Jeff",
+      "trainings": [
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6",
+        "t7",
+        "t8",
+        "t9",
+        "t10",
+        "t11",
+        "t12",
+        "t13",
+        "t14",
+        "t15",
+        "t16",
+        "t17",
+        "t18",
+        "t19",
+        "t20"
+      ],
+      "days_unavailable": []
+    },
+    {
+      "name": "Matt",
+      "trainings": [
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6",
+        "t7",
+        "t8",
+        "t9",
+        "t10",
+        "t11",
+        "t12",
+        "t13",
+        "t14",
+        "t15",
+        "t16",
+        "t17",
+        "t18",
+        "t19",
+        "t20"
+      ],
+      "days_unavailable": []
+    },
+    {
+      "name": "Zach",
+      "trainings": [
+        "t1",
+        "t2",
+        "t4",
+        "t6",
+        "t7",
+        "t8",
+        "t9",
+        "t10",
+        "t11",
+        "t12",
+        "t13",
+        "t14",
+        "t15",
+        "t16",
+        "t17",
+        "t18",
+        "t19",
+        "t20"
+      ],
+      "days_unavailable": []
+    },
+    {
+      "name": "Alex",
+      "trainings": [
+        "t1",
+        "t2",
+        "t4",
+        "t6",
+        "t7",
+        "t8",
+        "t9",
+        "t10",
+        "t11",
+        "t12",
+        "t13",
+        "t14",
+        "t15",
+        "t16",
+        "t17",
+        "t18",
+        "t19",
+        "t20"
+      ],
+      "days_unavailable": []
+    },
+    {
+      "name": "Mike",
+      "trainings": [
+        "t1",
+        "t2",
+        "t4",
+        "t6",
+        "t7",
+        "t8",
+        "t9",
+        "t10",
+        "t11",
+        "t12",
+        "t13",
+        "t15",
+        "t16",
+        "t17",
+        "t18",
+        "t19",
+        "t20"
+      ],
+      "days_unavailable": []
+    }
+  ],
+  "tasks": [
+    {
+      "name": "Morning reports",
+      "required_trainings": ["t1"],
+      "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    },
+    {
+      "name": "margin call processing",
+      "required_trainings": ["t2"],
+      "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    },
+    {
+      "name": "spax/lme",
+      "required_trainings": ["t3"],
+      "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    },
+    {
+      "name": "File drop: Mix&Match, citco, & lyxor",
+      "required_trainings": ["t4"],
+      "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    },
+    {
+      "name": "PHMV/Segsec",
+      "required_trainings": ["t5"],
+      "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    },
+    {
+      "name": "Mvmt Tool",
+      "required_trainings": ["t6"],
+      "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    },
+    {
+      "name": "Mass Approver",
+      "required_trainings": ["t7"],
+      "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    },
+    {
+      "name": "Morning ODs",
+      "required_trainings": ["t8"],
+      "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    },
+    {
+      "name": "Verify Antics",
+      "required_trainings": ["t9"],
+      "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    },
+    {
+      "name": "Top Day Settlements",
+      "required_trainings": ["t10"],
+      "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    },
+    {
+      "name": "Settlement Fails",
+      "required_trainings": ["t11"],
+      "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    },
+    {
+      "name": "Overdrafts",
+      "required_trainings": ["t12"],
+      "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    },
+    {
+      "name": "Maturity Subs",
+      "required_trainings": ["t13"],
+      "days": ["Monday"],
+      "notes": "only ran on Monday"
+    },
+    {
+      "name": "Optimization",
+      "required_trainings": ["t14"],
+      "days": ["Tuesday", "Wednesday"],
+      "notes": "only ran Tuesday & Wednesday"
+    },
+    {
+      "name": "MOD Reports",
+      "required_trainings": ["t15"],
+      "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    },
+    {
+      "name": "EOD Reports",
+      "required_trainings": ["t16"],
+      "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "notes": "whoever has EOD has late person tasks"
+    },
+    {
+      "name": "Shorfalls Email",
+      "required_trainings": ["t17"],
+      "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "notes": "same person all week"
+    },
+    {
+      "name": "Cross border emails",
+      "required_trainings": ["t18"],
+      "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "notes": "same person all week"
+    },
+    {
+      "name": "Late Person Tasks",
+      "required_trainings": ["t19"],
+      "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    }
+  ],
+
+  "trainings": {
+    "t1": "Morning reports",
+    "t2": "margin call processing",
+    "t3": "spax/lme",
+    "t4": "File drop: Mix&Match, citco, & lyxor",
+    "t5": "PHMV/Segsec",
+    "t6": "Mvmt Tool",
+    "t7": "Mass Approver",
+    "t8": "Morning ODs",
+    "t9": "Verify Antics",
+    "t10": "Top Day Settlements",
+    "t11": "Settlement Fails",
+    "t12": "Overdrafts",
+    "t13": "Maturity Subs",
+    "t14": "Optimization",
+    "t15": "MOD Reports",
+    "t16": "EOD Reports",
+    "t17": "Shorfalls Email",
+    "t18": "Cross border emails",
+    "t19": "Late Person Tasks",
+    "t20": "OOO"
+  },
+  "days_of_week": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+}
